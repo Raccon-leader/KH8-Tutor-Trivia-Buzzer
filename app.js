@@ -176,7 +176,7 @@ function renderBoard(data) {
         data.forEach(cat => {
             const clue = cat.clues[r];
             const tile = document.createElement("button");
-            tile.innerText = `$${clue.value}`;
+            tile.innerText = `${clue.value}`;
             tile.style.padding = "20px";
 
             tile.addEventListener("click", () => {
@@ -194,7 +194,7 @@ function showQuestionScreen(category, question, answer, value) {
     resetBuzzer();
 
     document.getElementById("game-screen").style.display = "none";
-    document.getElementById("question-category").innerText = `${category} - $${value}`;
+    document.getElementById("question-category").innerText = `${category} - ${value}`;
     document.getElementById("question-text").innerText = question;
     document.getElementById("answer-text").innerText = `Answer: ${answer}`;
     
@@ -220,8 +220,8 @@ function renderQuestionScoreControls() {
         card.innerHTML = `
             <div><strong>${team.name}</strong>: <span id="q-score-team-${index}">${team.score}</span></div>
             <div style="margin-top: 5px;">
-                <button onclick="adjustTeamScore(${index}, true)">+ $${currentClueValue}</button>
-                <button onclick="adjustTeamScore(${index}, false)">- $${currentClueValue}</button>
+                <button onclick="adjustTeamScore(${index}, true)">+ ${currentClueValue}</button>
+                <button onclick="adjustTeamScore(${index}, false)">- ${currentClueValue}</button>
             </div>
         `;
 
