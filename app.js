@@ -282,14 +282,16 @@ function generateQRCodeScreen() {
 
     hostPeer = new Peer(`kh8-trivia-${roomCode}`);
     hostPeer.on("connection", (conn) => {
-        connectedPeers.push(conn);
+        connectedPeers.push(conn); // <--- ADD THIS LINE
+
         conn.on("data", (data) => {
             if (data.type === "BUZZ") {
                 handleIncomingBuzz(data.teamName);
             }
         });
     });
-}
+        };
+    
 
 function handleIncomingBuzz(teamName) {
     if (!currentBuzzedTeam && document.getElementById("question-screen").style.display === "block") {
