@@ -12,20 +12,46 @@ let connectedPeers = [];
 
 // Default Question Set
 const defaultGameData = [
-    {
-        category: "Math & Logic",
-        clues: [
-            { value: 200, question: "What is 15 x 4?", answer: "60" },
-            { value: 400, question: "Square root of 144.", answer: "12" }
-        ]
-    },
-    {
-        category: "General Knowledge",
-        clues: [
-            { value: 200, question: "Capital of Australia?", answer: "Canberra" },
-            { value: 400, question: "Largest ocean on Earth?", answer: "Pacific Ocean" }
-        ]
-    }
+  {
+    "category": "Math & Logic",
+    "clues": [
+      { "value": 200, "question": "What is 15 x 4?", "answer": "60" },
+      { "value": 400, "question": "What is the square root of 144?", "answer": "12" },
+      { "value": 600, "question": "What is the next prime number after 7?", "answer": "11" },
+      { "value": 800, "question": "Solve for x: 3x + 9 = 24", "answer": "x = 5" },
+      { "value": 1000, "question": "What is the sum of angles in a hexagon?", "answer": "720 degrees" }
+    ]
+  },
+  {
+    "category": "Science",
+    "clues": [
+      { "value": 200, "question": "What chemical element has the symbol 'O'?", "answer": "Oxygen" },
+      { "value": 400, "question": "Which planet is known as the Red Planet?", "answer": "Mars" },
+      { "value": 600, "question": "What is the hardest natural substance on Earth?", "answer": "Diamond" },
+      { "value": 800, "question": "What force keeps us on the ground?", "answer": "Gravity" },
+      { "value": 1000, "question": "What speed does light travel at in a vacuum (approx)?", "answer": "300,000 km/s" }
+    ]
+  },
+  {
+    "category": "History & Geo",
+    "clues": [
+      { "value": 200, "question": "What is the capital of Australia?", "answer": "Canberra" },
+      { "value": 400, "question": "In which country can you find the Great Pyramids of Giza?", "answer": "Egypt" },
+      { "value": 600, "question": "Who was the first President of the United States?", "answer": "George Washington" },
+      { "value": 800, "question": "What is the longest river in the world?", "answer": "The Nile River" },
+      { "value": 1000, "question": "In what year did World War II end?", "answer": "1945" }
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "clues": [
+      { "value": 200, "question": "Which superhero is also known as Bruce Wayne?", "answer": "Batman" },
+      { "value": 400, "question": "How many players are on a standard soccer team on the field?", "answer": "11 players" },
+      { "value": 600, "question": "What standard color are school buses in North America?", "answer": "Yellow" },
+      { "value": 800, "question": "Which video game features plumbers named Mario and Luigi?", "answer": "Super Mario Bros." },
+      { "value": 1000, "question": "How many continents are there on Earth?", "answer": "7" }
+    ]
+  }
 ];
 
 document.addEventListener("DOMContentLoaded", () => {
