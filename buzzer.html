@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buzzer - KH8 Trivia</title>
+    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #0f3827;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: 90vh;
+        }
+        input, button {
+            padding: 15px;
+            font-size: 1.2rem;
+            margin: 10px 0;
+            border-radius: 8px;
+        }
+        #buzz-btn {
+            flex: 1;
+            background-color: #F19C2E;
+            color: #0f3827;
+            font-size: 3rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 10px 0 #b57018;
+            cursor: pointer;
+        }
+        #buzz-btn:active {
+            transform: translateY(6px);
+            box-shadow: 0 4px 0 #b57018;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="join-form">
+        <h2>Join KH8 Trivia Game</h2>
+        <input type="text" id="room-code-input" placeholder="Enter Room Code" style="text-transform: uppercase;">
+        <br>
+        <input type="text" id="player-name-input" placeholder="Your Team Name">
+        <br>
+        <button id="join-btn">Connect Buzzer</button>
+    </div>
+
+    <div id="buzzer-area" style="display: none; flex-direction: column; flex: 1;">
+        <h3 id="connected-status">Connected as: <span id="team-label"></span></h3>
+        <button id="buzz-btn">BUZZ!</button>
+    </div>
+
+    <script>
+        let peer = null;
+        let conn = null;
+
+        document.getElementById("join-btn").addEventListener("click", () => {
+            const code = document.getElementById("room-code-input").value.trim().toUpperCase();
+            const name = document.getElementById("player-name-input").value.trim();
+
+            if (!code || !name) {
+                alert("Please enter both Room Code and Team Name");
+                return;
+            }
+
+            peer = new Peer();
+            
+            peer.on("open", () => {
+                conn = peer.connect(`kh8-trivia-${code}`);
+                
+                conn.on("open", () => {
+                    document.getElementById("join-form").style.display = "none";
+                    document.getElementById("buzzer-area").style.display = "flex";
+                    document.getElementById("team-label").innerText = name;
+                });
+
+                conn.on("data", (data) => {
+                    if (data.type === "BUZZ_RESULT") {
+                        if (data.winner === name) {
+                            navigator.vibrate && navigator.vibrate([100, 50, 100]);
+                        }
+                    }
+                });
+            });
+        });
+
+        document.getElementById("buzz-btn").addEventListener("click", () => {
+            if (conn && conn.open) {
+                const name = document.getElementById("player-name-input").value.trim();
+                conn.send({ type: "BUZZ", teamName: name });
+            }
+        });
+    </script>
+</body>
+</html>

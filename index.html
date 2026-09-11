@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Classroom Jeopardy</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Include PeerJS and QRCode libraries -->
+    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+
+<!-- Setup Wizard Container -->
+<div id="selection-screen">
+    <h1>KH8 Tutor Trivia</h1>
+
+    <!-- Step 1: Preset or Custom -->
+    <div id="setup-step-1">
+        <h2>Select Question Set</h2>
+        <button id="preset-btn">Preset Questions</button>
+        <button type="button" onclick="document.getElementById('custom-file-input').click()">Custom Questions</button>
+        <input type="file" id="custom-file-input" accept=".json" style="display:none;">
+    </div>
+
+    <!-- Step 2: Team Count -->
+    <div id="setup-step-2" style="display:none;">
+        <h2>How many teams are playing?</h2>
+        <input type="number" id="team-count" min="1" max="6" value="3">
+        <br><br>
+        <button id="next-to-names-btn">Next</button>
+    </div>
+
+    <!-- Step 3: Team Names -->
+    <div id="setup-step-3" style="display:none;">
+        <h2>Enter Team Names</h2>
+        <div id="team-inputs-container" style="margin: 20px 0;"></div>
+        <button id="to-qr-screen-btn">Next: Connect Phone Buzzers</button>
+    </div>
+
+    <!-- Step 4: NEW QR Code & Join Screen -->
+    <div id="setup-step-4" style="display:none; text-align: center;">
+        <h2>Scan QR Code to Join as Buzzer</h2>
+        <p style="color: #F19C2E; font-size: 1.2rem; margin-bottom: 15px;">
+            Room Code: <span id="setup-room-code" style="font-weight: bold; letter-spacing: 2px;"></span>
+        </p>
+
+        <!-- QR Code renders inside this div -->
+        <div id="qrcode" style="display: flex; justify-content: center; margin: 20px auto; padding: 15px; background: white; width: fit-content; border-radius: 12px;"></div>
+
+        <p style="margin-bottom: 25px; color: #ccc;">Or visit <b>buzzer.html</b> on your phone and enter the code above.</p>
+        <button id="start-game-btn" style="font-size: 1.4rem; padding: 12px 30px;">Start Game</button>
+    </div>
+</div>
+
+<!-- Main Game Board View -->
+<div id="game-screen" style="display:none;">
+    <header id="scoreboard"></header>
+    <main id="board-container"></main>
+</div>
+
+    <!-- Full-Screen Question View -->
+    <div id="question-screen" style="display:none; text-align: center; padding: 40px;">
+        <h3 id="question-category">Category Header</h3>
+        
+        <!-- Buzzer Status Display -->
+        <div id="buzzer-status" style="font-size: 1.8rem; color: #F19C2E; margin: 15px 0; min-height: 40px; font-weight: bold;">
+            Waiting for buzz...
+        </div>
+
+        <h1 id="question-text" style="font-size: 2.5rem; margin: 20px 0;">Question Text</h1>
+        <h2 id="answer-text" style="font-size: 2rem; color: #ffcc00; display: none;">Answer Text</h2>
+
+        <div id="question-score-controls" style="margin: 20px 0; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;"></div>
+
+        <div style="margin-top: 20px;">
+            <button id="reset-buzz-btn">Reset Buzzers</button>
+            <button id="show-answer-btn">Reveal Answer</button>
+            <button id="back-to-board-btn" style="display: none;">Back to Board</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

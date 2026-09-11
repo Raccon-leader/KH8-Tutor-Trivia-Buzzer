@@ -1,0 +1,194 @@
+/* --- 1. Base & Reset Styles --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #b7cac1;
+    color: #ffffff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Base Buttons */
+button {
+    background-color: #284338;
+    color: #F19C2E;
+    border: 2px solid #F19C2E;
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+button:hover {
+    background-color: #358761;
+    transform: translateY(-2px);
+}
+
+button:disabled {
+    background-color: #222244;
+    color: #666;
+    border-color: #444;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* --- 2. Setup Wizard Screens --- */
+#selection-screen {
+    background-color: #284338;
+    border: 3px solid #F19C2E;
+    border-radius: 12px;
+    padding: 40px;
+    margin-top: 60px;
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+}
+
+#selection-screen h1 {
+    color: #F19C2E;
+    font-size: 2.2rem;
+    margin-bottom: 25px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#selection-screen h2 {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+}
+
+#selection-screen input[type="number"],
+#selection-screen input[type="text"] {
+    background-color: #ffffff;
+    color: #000;
+    border: 2px solid #F19C2E;
+    border-radius: 4px;
+    padding: 10px;
+    font-size: 1.1rem;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+/* --- 3. Main Game Board & Scoreboard --- */
+#game-screen {
+    width: 100%;
+    max-width: 1200px;
+    padding: 5px;
+}
+
+/* Persistent Header Scoreboard */
+#scoreboard {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    background-color: #0f3827;
+    border: 2px solid #F19C2E;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+
+#scoreboard > div {
+    background-color: #284338;
+    border: 1px solid #F19C2E;
+    border-radius: 6px;
+    padding: 10px 20px;
+    font-size: 1.2rem;
+}
+
+#scoreboard strong {
+    color: #F19C2E;
+}
+
+/* Jeopardy Board Grid Container */
+#board-container {
+    width: 100%;
+}
+
+/* Category Headers */
+#board-container > div {
+    background-color: #163629;
+    border: 2px solid #000;
+    color: #ffffff;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;    
+    justify-content: center;
+    text-align: center;
+    min-height: 80px;
+    padding: 10px;
+}
+
+/* Grid Clue Tiles */
+#board-container > button {
+    background-color: #295c48;
+    border: 2px solid #000;
+    color: #F19C2E;
+    font-size: 1.8rem;
+    font-weight: bold;
+    min-height: 100px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#board-container > button:hover:not(:disabled) {
+    background-color: #358761;
+}
+
+/* --- 4. Full-Screen Question View --- */
+#question-screen {
+    background-color: #0f3827;
+    border: 4px solid #F19C2E;
+    border-radius: 12px;
+    max-width: 900px;
+    width: 90%;
+    margin-top: 40px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
+}
+
+#question-category {
+    color: #F19C2E;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#question-text {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    line-height: 1.4;
+}
+
+/* Team Card Containers inside Question Screen */
+#question-score-controls > div {
+    background-color: #284338;
+    border: 2px solid #F19C2E !important;
+    padding: 15px !important;
+    min-width: 150px;
+}
+
+#question-score-controls button {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    margin: 3px;
+}
+/* Gray out completed question tiles */
+#board-container > button:disabled {
+    background-color: #555555 !important;
+    color: #999999 !important;
+    border-color: #333333 !important;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
