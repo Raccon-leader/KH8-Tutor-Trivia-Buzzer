@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Host View - KH8 Trivia</title>
+    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #0f3827;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+        }
+        input, button {
+            padding: 12px 20px;
+            font-size: 1.2rem;
+            margin: 10px;
+            border-radius: 8px;
+            border: none;
+        }
+        #create-btn, #reset-btn {
+            background-color: #F19C2E;
+            color: #0f3827;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        #reset-btn {
+            font-size: 1.5rem;
+            padding: 15px 30px;
+        }
+        .winner-box {
+            font-size: 2.5rem;
+            margin: 20px auto;
+            padding: 30px;
+            background-color: #1b5e3f;
+            border-radius: 15px;
+            border: 4px solid #F19C2E;
+            max-width: 500px;
+            min-height: 50px;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        li {
+            background: rgba(255, 255, 255, 0.1);
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="setup-area">
+        <h2>Host KH8 Trivia Game</h2>
+        <input type="text" id="room-code-input" placeholder="Set Room Code (e.g. KH8)" style="text-transform: uppercase;">
+        <button id="create-btn">Create Room</button>
+    </div>
+
+    <div id="host-dashboard" style="display: none;">
+        <h2>Room Code: <span id="display-room-code" style="color: #F19C2E;"></span></h2>
+        
+        <div class="winner-box">
+            <span>First Buzz: </span>
+            <strong id="winner-name" style="color: #F19C2E;">---</strong>
+        </div>
+
+        <button id="reset-btn">Reset Buzzers</button>
+
+        <h3>Connected Teams (<span id="player-count">0</span>):</h3>
+        <ul id="players-list"></ul>
+    </div>
+
+    <script>
+        let peer = null;
+        let connections = [];
+        let firstBuzz = null;
+
+        document.getElementById("create-btn").addEventListener("click", () => {
+            const code = document.getElementById("room-code-input").value.trim().toUpperCase();
+
+            if (!code) {
+                alert("Please enter a Room Code");
+                return;
+            }
+
+            // Create peer with the exact ID the buzzer script expects: kh8-trivia-CODE
+            peer = new Peer(`kh8-trivia-${code}`);
+
+            peer.on("open", (id) => {
+                document.getElementById("setup-area").style.display = "none";
+                document.getElementById("host-dashboard").style.display = "block";
+                document.getElementById("display-room-code").innerText = code;
+            });
+
+            peer.on("connection", (conn) => {
+                connections.push(conn);
+
+                conn.on("data", (data) => {
+                    if (data.type === "BUZZ") {
+                        handleBuzz(data.teamName);
+                    }
+                });
+
+                conn.on("close", () => {
+                    connections = connections.filter(c => c !== conn);
+                    updatePlayerList();
+                });
+            });
+
+            peer.on("error", (err) => {
+                if (err.type === "unavailable-id") {
+                    alert("This Room Code is already active. Choose a different one.");
+                } else {
+                    alert("PeerJS Error: " + err.type);
+                }
+            });
+        });
+
+        function handleBuzz(teamName) {
+            // Lock in the first buzz only
+            if (!firstBuzz) {
+                firstBuzz = teamName;
+                document.getElementById("winner-name").innerText = teamName;
+
+                // Broadcast the buzz result back to all connected buzzers
+                connections.forEach(conn => {
+                    if (conn.open) {
+                        conn.send({ type: "BUZZ_RESULT", winner: teamName });
+                    }
+                });
+            }
+
+            // Add team to active list view if not already listed
+            updatePlayerList(teamName);
+        }
+
+        function updatePlayerList(newTeamName = null) {
+            const list = document.getElementById("players-list");
+            if (newTeamName && !Array.from(list.children).some(li => li.innerText === newTeamName)) {
+                const li = document.createElement("li");
+                li.innerText = newTeamName;
+                list.appendChild(li);
+            }
+            document.getElementById("player-count").innerText = list.children.length;
+        }
+
+        document.getElementById("reset-btn").addEventListener("click", () => {
+            firstBuzz = null;
+            document.getElementById("winner-name").innerText = "---";
+        });
+    </script>
+</body>
+</html>

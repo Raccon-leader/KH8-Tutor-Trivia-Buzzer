@@ -8,6 +8,7 @@ let currentClueValue = 0;
 let hostPeer = null;
 let roomCode = "";
 let currentBuzzedTeam = null;
+let connectedPeers = [];
 
 // Default Question Set
 const defaultGameData = [
@@ -203,6 +204,17 @@ function showQuestionScreen(category, question, answer, value) {
     document.getElementById("back-to-board-btn").style.display = "none";
 
     renderQuestionScoreControls();
+    connectedPeers.forEach(conn => {
+        if (conn.open) {
+            conn.send({
+                type: "QUESTION_UPDATE",
+                category: category,
+                question: question,
+                answer: answer,
+                value: value
+            });
+        }
+    });
 
     document.getElementById("question-screen").style.display = "block";
 }
@@ -270,6 +282,7 @@ function generateQRCodeScreen() {
 
     hostPeer = new Peer(`kh8-trivia-${roomCode}`);
     hostPeer.on("connection", (conn) => {
+        connectedPeers.push(conn);
         conn.on("data", (data) => {
             if (data.type === "BUZZ") {
                 handleIncomingBuzz(data.teamName);
