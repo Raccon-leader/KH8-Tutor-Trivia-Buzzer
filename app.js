@@ -10,6 +10,8 @@ let roomCode = "";
 let currentBuzzedTeam = null;
 let connectedPeers = [];
 
+let currentTurnIndex = 0; // Tracks which team currently controls the board
+
 // Default Question Set
 const defaultGameData = [
   {
@@ -170,17 +172,24 @@ function saveTeamNamesAndInitialize() {
 // --- Game Logic Functions ---
 
 function renderScoreboard() {
-    const scoreboard = document.getElementById("scoreboard");
-    scoreboard.innerHTML = ""; 
+    const scoreboardContainer = document.getElementById("scoreboard");
+    scoreboardContainer.innerHTML = "";
 
     teams.forEach((team, index) => {
-        const teamDiv = document.createElement("div");
-        teamDiv.style.margin = "0 10px";
-        teamDiv.innerHTML = `
-            <strong>${team.name}:</strong> 
-            <span id="score-team-${index}">${team.score}</span>
+        const teamBox = document.createElement("div");
+        teamBox.className = "scoreboard-item";
+
+        // ADD ACTIVE HIGHLIGHT IF IT IS THIS TEAM'S TURN
+        if (index === currentTurnIndex) {
+            teamBox.classList.add("active-team");
+        }
+
+        teamBox.innerHTML = `
+            <div><strong>${team.name}</strong></div>
+            <div>${team.score}</div>
         `;
-        scoreboard.appendChild(teamDiv);
+
+        scoreboardContainer.appendChild(teamBox);
     });
 }
 
@@ -270,15 +279,15 @@ function renderQuestionScoreControls() {
 function adjustTeamScore(teamIndex, isCorrect) {
     if (isCorrect) {
         teams[teamIndex].score += currentClueValue;
+        
+        // Correct answer gets control of the board!
+        currentTurnIndex = teamIndex; 
     } else {
         teams[teamIndex].score -= currentClueValue;
     }
 
-    document.getElementById(`q-score-team-${teamIndex}`).innerText = teams[teamIndex].score;
-    const boardScore = document.getElementById(`score-team-${teamIndex}`);
-    if (boardScore) {
-        boardScore.innerText = teams[teamIndex].score;
-    }
+    renderScoreboard();
+    renderQuestionScoreControls(); // Refresh question overlay controls if open
 }
 
 // --- PeerJS & QR Code Logic ---

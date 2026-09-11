@@ -192,3 +192,10 @@ button:disabled {
     cursor: not-allowed;
     opacity: 0.6;
 }
+/* Active team highlight */
+.scoreboard-item.active-team {
+    border: 3px solid #F19C2E !important;
+    background-color: rgba(241, 156, 46, 0.2) !important;
+    transform: scale(1.05);
+    transition: all 0.3s ease;
+}
